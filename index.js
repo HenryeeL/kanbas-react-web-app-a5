@@ -11,6 +11,8 @@ import AssignmentRoutes from "./Kanbas/Assignments/router.js";
 import EnrollmentsRoutes from "./Kanbas/Enrollments/router.js";
 
 const app = express();
+app.set('trust proxy', 1);
+
 app.use(
   cors({
     credentials: true,
@@ -29,15 +31,16 @@ const sessionOptions = {
     secure: process.env.NODE_ENV === "production",
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     maxAge: 24 * 60 * 60 * 1000,
-  }
+  },
+  proxy: process.env.NODE_ENV === "production"
 };
+
 if (process.env.NODE_ENV === "production") {
-  sessionOptions.proxy = true;
   sessionOptions.cookie.domain = process.env.NODE_SERVER_DOMAIN;
 }
+
 app.use(session(sessionOptions));
 
-   
 app.use(express.json());
 app.use(express.json());
 Lab5(app);

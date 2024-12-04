@@ -2,6 +2,16 @@ import * as dao from "./dao.js";
 import * as courseDao from "../Courses/dao.js"
 import * as enrollmentsDao from "../Enrollments/dao.js";
 
+// 添加 requireLogin 中间件
+const requireLogin = (req, res, next) => {
+  const currentUser = req.session["currentUser"];
+  if (!currentUser) {
+    res.status(401).json({ message: "请先登录" });
+    return;
+  }
+  next();
+};
+
 export default function UserRoutes(app) {
   const createUser = (req, res) => { };
   const deleteUser = (req, res) => { };
