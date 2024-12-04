@@ -14,7 +14,7 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: "https://tinghao2024.netlify.app",
+    origin: process.env.NETLIFY_URL,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   })
@@ -22,14 +22,13 @@ app.use(
 app.options("*", cors());
 
 const sessionOptions = {
-  secret: process.env.SESSION_SECRET || "kanbas",
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
     secure: process.env.NODE_ENV === "production",
-    sameSite: "none",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     maxAge: 24 * 60 * 60 * 1000,
-    domain: process.env.NODE_ENV === "production" ? ".onrender.com" : undefined
   }
 };
 if (process.env.NODE_ENV === "production") {

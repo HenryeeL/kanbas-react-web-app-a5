@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: kanbas-node-server
+    env: node
+    buildCommand: npm install
+    startCommand: node index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NETLIFY_URL
+        value: https://tinghao2024.netlify.app
+      - key: NODE_SERVER_DOMAIN
+        value: .onrender.com
+      - key: SESSION_SECRET
+        sync: false 
