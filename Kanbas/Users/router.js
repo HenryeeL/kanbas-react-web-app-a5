@@ -4,10 +4,15 @@ import * as enrollmentsDao from "../Enrollments/dao.js";
 
 // 添加 requireLogin 中间件
 const requireLogin = (req, res, next) => {
-  const currentUser = req.session["currentUser"];
+  console.log("Session in requireLogin:", req.session);
+  console.log("Current user in session:", req.session.currentUser);
+  const currentUser = req.session.currentUser;
   if (!currentUser) {
-    res.status(401).json({ message: "请先登录" });
-    return;
+    return res.status(401).json({ 
+      message: "请先登录",
+      session: req.session,
+      cookies: req.headers.cookie 
+    });
   }
   next();
 };
@@ -57,6 +62,8 @@ export default function UserRoutes(app) {
             res.status(500).json({ message: "登录失败，请重试" });
             return;
           }
+          console.log("Session saved:", req.session);
+          console.log("Cookies:", req.headers.cookie);
           res.json(currentUser);
         });
       } else {

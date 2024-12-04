@@ -19,24 +19,26 @@ app.use(
     origin: process.env.NETLIFY_URL,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+    exposedHeaders: ["set-cookie"],
   })
 );
 app.options("*", cors());
 
 const sessionOptions = {
   secret: process.env.SESSION_SECRET,
-  resave: false,
+  resave: true,
   saveUninitialized: false,
   cookie: {
     secure: process.env.NODE_ENV === "production",
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     maxAge: 24 * 60 * 60 * 1000,
+    httpOnly: true,
   },
-  proxy: process.env.NODE_ENV === "production"
+  proxy: true
 };
 
 if (process.env.NODE_ENV === "production") {
-  sessionOptions.cookie.domain = process.env.NODE_SERVER_DOMAIN;
+  sessionOptions.cookie.domain = ".onrender.com";
 }
 
 app.use(session(sessionOptions));
